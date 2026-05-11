@@ -1,0 +1,47 @@
+# --- OS関連 ---
+
+.DS_Store
+
+
+
+# --- Java関連 ---
+
+*.class
+
+
+
+# --- エディタ・IDE関連 ---
+
+.vscode/
+
+
+
+# IntelliJ IDEAの設定ファイル
+
+.idea/
+
+*.iml
+
+
+
+# --- その他 ---
+
+*.log
+
+
+
+# --- Java/Spring Boot用 (将来のため) ---
+
+target/
+
+bin/
+
+build/
+
+.gradle/
+
+.settings/
+
+.classpath
+
+.project
