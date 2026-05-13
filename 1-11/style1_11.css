@@ -1,0 +1,25 @@
+/* 問1：タグ指定 */
+li {
+    color:red;
+}
+
+/* 問2：class指定 */
+.select {
+    color:#0099FF;
+}
+
+/* 問4：タグ指定とclass指定の違い */
+p {
+    color:blue;
+}
+
+.note {
+    color:green;
+}
+
+/* 問5：id指定 */
+#main {
+    color:orange;
+
+    font-weight: bold;
+}
