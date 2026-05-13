@@ -1,0 +1,55 @@
+/* ページ全体 */
+body {
+    background-color: #FAFAFF;
+    font-family: "Yu Gothic", sans-serif;
+    color: #333;
+    margin: 20px;
+}
+
+/* タイトル */
+h1 {
+    color: #007ACC;
+    text-align: center;
+    border: solid 3px #007ACC;
+    padding: 10px;
+    background-color: #E6F2FF;
+    margin-bottom: 40px;
+}
+
+/* 各問のh2 */
+h2 {
+    margin-top: 30px;
+}
+
+/* 問3：外部CSSのボックス */
+.box {
+    border: solid 2px #999;
+    padding: 10px;
+    width: 200px;
+}
+
+/* 問4：色指定 */
+.color-name {
+    /* 問4の回答をここに記載 */
+    color: blue; /* カラーネーム（青） */
+}
+.hex6 {
+    /* 問4の回答をここに記載 */
+    color: #FF0000; /* 6桁コード（赤） */
+}
+.hex3 {
+    /* 問4の回答をここに記載 */
+    color: #0f0; /* 3桁コード（緑） */
+}
+
+/* 問5：枠線 */
+.border-box {
+    /* 問5の回答をここに記載 */
+    border: dotted 2px #666;
+    padding: 10px;
+    width: 250px;
+
+   /* 問5の回答をここに記載 */
+}
+
+/*コメントはブラウザに表示されません。*/
