@@ -1,0 +1,54 @@
+/* 全体設定 */
+body {
+    font-family: sans-serif;
+    margin: 20px;
+    background-color: #fafafa;
+}
+
+/* h1タイトル */
+h1 {
+    text-align: center;
+    color: #007ACC;
+    margin-bottom: 40px;
+}
+
+/* 問1：文字の大きさ */
+.font-size p {
+    /* ここに記載 */
+    font-size: 40px;
+}
+
+/* 問2：文字の種類 */
+.font-family p {
+    /* ここに記載 */
+    font-family: serif;
+}
+
+/* 問3：背景色 */
+.background-color p {
+    /* ここに記載 */
+    background-color: yellow;
+}
+
+/* 問4：幅・高さ */
+.size p {
+    /* ここに記載 */
+    width: 400px;
+    height: 100px;
+    background-color: gainsboro;
+}
+
+/* 問5：その他プロパティ */
+.other-properties .box {
+    /* ここに記載 */
+    box-sizing: border-box;
+    margin: 20px;
+    padding: 15px;
+    border: 2px solid black;
+}
+
+
+/*以下のプロパティを使用して <div> ボックス（div class="box"）を装飾してください：
+　・要素の外側の余白：20px
+　・要素の内側の余白：15px
+　・要素の外枠：2px */
