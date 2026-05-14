@@ -1,0 +1,87 @@
+body {
+  font-family: "メイリオ", sans-serif;
+  margin: 40px;
+  background-color: #f5f5f5;
+}
+
+/* 共通ボックス */
+.box {
+  width: 200px;
+  height: 100px;
+  margin-bottom: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #000;
+  font-weight: bold;
+  border: 2px solid #000;
+}
+
+/* 問1：marginプロパティ */
+.box-margin {
+  margin: 0 20px 40px 60px;
+  background-color: #00bfff;
+}
+
+/* 問2：paddingプロパティ */
+.box-padding {
+  padding: 20px 40px 60px 80px;
+  width: 300px;
+  height: auto;
+  background-color: #90ee90;
+}
+
+/* flexで使う共通設定 */
+.flex-box {
+  width: 80px;
+  height: 80px;
+  background-color: #bde0fe;
+  border: 1px solid #000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+}
+
+/* 問3：flexの活用1 */
+.flex-horizontal {
+    display: flex;
+    margin-bottom: 40px;
+}
+
+/* 問4：flexの活用2 */
+.flex-vertical {
+    margin-bottom: 40px;
+}
+
+/* 問5：gapの活用 */
+.flex-gap {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+/* 問6：総合問題 */
+.three-column {
+    display: flex;
+    margin-bottom: 40px;
+    gap: 10px;
+}
+
+.menu {
+    background-color: #f4a261;
+    width: 15%;
+    padding: 20px;
+}
+
+.main {
+    background-color: #2a9d8f;
+    width: 50%;
+    padding: 20px;
+}
+
+.side {
+    background-color: #e9c46a;
+    width: 35%;
+    padding: 20px;
+}
