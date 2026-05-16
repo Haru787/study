@@ -1,0 +1,36 @@
+@media screen and (max-width: 479px) {
+    .wrapper {
+        width: 400px;
+    }
+    .left {
+        width: 200px;
+        height: 500px;
+    }
+    .left-upper {
+        width: 90px;
+        height: 60px;
+    }
+    .left-lower {
+        width: 90px;
+        height: 320px;
+    }
+    .center {
+        width: 200px;
+    }
+    .left-center {
+        display: flex;
+        flex-direction: column;
+    }
+    .right {
+        width: 200px;
+    }
+    .right-inner {
+        width: 110px;
+    }
+    .right-inner-text {
+        font-size: 5px;
+        padding: 10px;
+        background-color: orange;
+        border-color: red;
+    }
+}
