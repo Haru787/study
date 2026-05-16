@@ -1,5 +1,6 @@
 #wrapper { /* 共通の処理 */
     width:800px;
+    margin: 0 auto;
 }
 .header {
     border: solid 1px #999999;

@@ -1,0 +1,14 @@
+@media screen and (max-width: 767px) {
+    #wrapper {
+        width: 80%;
+}
+}
+
+@media screen and (max-width: 479px) {
+    .header {
+        height: 300px;
+    }
+    .footer {
+        height: 200px;
+    }
+}
