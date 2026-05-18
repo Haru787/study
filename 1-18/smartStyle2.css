@@ -1,0 +1,91 @@
+@media screen and (max-width: 767px) {
+    .wrapper {
+        width: 300px;
+    }
+    .header {
+        width: 300px;
+    }
+    .left {
+        width: 100px;
+    }
+    .box-red {
+        width: 75px;
+    }
+    .box-green {
+        width: 125px;
+    }
+    .box-pink {
+        width: 125px;
+    }
+    .box-yellow {
+        width: 200px;
+    }
+    .footer {
+        width: 300px;
+    }
+}
+
+@media screen and (max-width: 479px) {
+    .wrapper {
+        width: 150px;
+        height: 650px;
+    }
+    .header {
+        width: 150px;
+        height: 100px;
+    }
+    .contents {
+        display: block;
+    }
+    .left {
+        width: 150px;
+        height: 100px;
+    }
+    .main-top {
+        display: block;
+    }
+    .box-red {
+        width: 150px;
+        height: 100px;
+    }
+    .box-green {
+        width: 150px;
+        /* height: 50px; PC版からサイズ変わってないからいらなかった。 */
+    }
+    .box-pink {
+        width: 150px;
+        height: 100px;
+    }
+    .box-yellow {
+        width: 150px;
+        height: 100px;
+    }
+    .footer {
+        width: 150px;
+        height: 100px;
+    }
+}
+
+/* 今回の学び */
+/* あとは、カンマで区切れば下記のようにもっとわかりやすく書ける */
+/* @media screen and (max-width: 767px) {
+    .wrapper, .header, .footer { width: 300px; }
+    .left { width: 100px; }
+    .box-red { width: 75px; }
+    .box-green, .box-pink { width: 125px; }
+    .box-yellow { width: 200px; }
+}
+
+@media screen and (max-width: 479px) {
+    .wrapper, .header, .left, .box-red, .box-green, .box-pink, .box-yellow, .footer {
+        width: 150px;
+    }
+    .contents, .main-top {
+        display: block;
+    }
+    .left {
+        height: 100px;
+    }
+} */
+
+/* あとはちゃんと一つの機能を実装したタイミングとかでcommitするよう癖付けないと。 */
