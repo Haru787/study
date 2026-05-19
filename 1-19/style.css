@@ -18,6 +18,11 @@
     width: 40px;
     height: 40px;
     background-color: #C2FFC8;
+    margin-right: -10px;
+}
+
+.header-box3 {
+    margin-right: 0;
 }
 
 .left {
