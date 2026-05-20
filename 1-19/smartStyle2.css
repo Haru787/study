@@ -1,0 +1,28 @@
+@media screen and (max-width: 479px) {
+    .wrapper {
+        width: 200px;
+    }
+    .header {
+        display: block;
+        padding: 20px 70px;
+        width: 60px;
+        height:160px;
+    }
+    .header-box1,.header-box2,.header-box3 {
+        margin-bottom: -10px;
+    }
+    .header-box3 {
+        margin-bottom: 0;
+    }
+    .contents {
+        display: block;
+    }
+    .left,.footer {
+        width: 200px;
+        height: 100px; /*高さが不明。そのまま横に倒したサイズにも見えないし… */
+    }
+    .main {
+        width: 150px;
+        padding: 20px 20px 10px 30px;
+    }
+}
