@@ -1,0 +1,10 @@
+2025-10-20 09:00:01 INFO  Server started successfully.
+2025-10-20 09:00:05 INFO  Connected to database.
+2025-10-20 09:00:12 WARN  Connection is slow.
+2025-10-20 09:00:30 ERROR Failed to retrieve user data.
+2025-10-20 09:01:10 INFO  Retrying connection...
+2025-10-20 09:01:15 ERROR Timeout while waiting for response.
+2025-10-20 09:02:00 INFO  Connection re-established.
+2025-10-20 09:02:45 DEBUG User authentication started.
+2025-10-20 09:03:00 INFO  User login successful.
+2025-10-20 09:03:20 INFO  Application running normally.
