@@ -6,7 +6,7 @@
 
 # --- Java関連 ---
 
-*.class
+# *.class
 
 
 
