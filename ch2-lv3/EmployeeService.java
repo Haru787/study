@@ -31,11 +31,16 @@ public class EmployeeService {
         System.out.println("===== 給与明細一覧 =====");
         for (Employee emp : employees) {
             Department dept = repository.findDepartmentById(emp.getDeptId());
-            System.out.printf("[%s] %-12s  %s（%s）  月給：%,d円%n",
+            String departmentText;
+            if (dept != null) {
+                departmentText = dept.getDeptName() + "（" + dept.getLocation() + "）";
+            } else {
+            departmentText = "部署未設定　　　　";//nullの場合は「部署未設定」と表示
+            }
+            System.out.printf("[%s] %-12s  %-14s  月給：%,d円%n",
                     emp.getEmployeeId(),
                     emp.getName(),
-                    dept.getDeptName(),
-                    dept.getLocation(),
+                    departmentText,
                     emp.calcMonthlySalary()
             );
         }

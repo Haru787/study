@@ -19,7 +19,7 @@ public class Main {
                 "主任", 6600000, 50000, LocalDate.of(2019, 4, 1)));
         repository.saveEmployee(new Employee("E002", "鈴木 花子", "D02",
                 "一般職", 5040000, 0, LocalDate.of(2022, 4, 1)));
-        repository.saveEmployee(new Employee("E003", "高橋 三郎", "D02",//部署ID修正。D99は存在しない部署ID
+        repository.saveEmployee(new Employee("E003", "高橋 三郎", "D99",//部署ID修正。D99は存在しない部署ID
                 "一般職", 4800000, 0, LocalDate.of(2023, 7, 1)));
         repository.saveEmployee(new Employee("E004", "山田 美咲", "D01",
                 "主任", 6000000, 50000, LocalDate.of(2020, 10, 1)));
