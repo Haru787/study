@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>注文フォーム</title>
+  <style>
+    body { font-family: sans-serif; margin: 24px; max-width: 600px; }
+    .form-group { margin-bottom: 16px; }
+    label { display: block; margin-bottom: 4px; font-weight: bold; }
+    input, select, textarea { width: 100%; padding: 8px; box-sizing: border-box; }
+    .error-text { color: red; font-size: 0.875rem; display: none; }
+    #resultMsg { margin-top: 16px; padding: 12px; display: none; }
+    .success { background: #e8f5e9; border: 1px solid #4caf50; color: #2e7d32; }
+    .failure { background: #ffebee; border: 1px solid #f44336; color: #c62828; }
+    button[type="submit"] { padding: 10px 24px; background: #1976d2; color: white; border: none; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h2>注文登録</h2>
+  <form id="orderForm">
+    <div class="form-group">
+      <label for="customerName">顧客名 <span style="color:red">*</span></label>
+      <input type="text" id="customerName" placeholder="例：田中 一郎">
+      <span class="error-text" id="errCustomerName">顧客名を入力してください</span>
+    </div>
+    <div class="form-group">
+      <label for="productId">商品ID <span style="color:red">*</span></label>
+      <input type="text" id="productId" placeholder="例：P-0042">
+      <span class="error-text" id="errProductId">商品IDを入力してください</span>
+    </div>
+    <div class="form-group">
+      <label for="quantity">数量 <span style="color:red">*</span></label>
+      <input type="number" id="quantity" min="1" placeholder="1以上の整数">
+      <span class="error-text" id="errQuantity">数量は1以上の整数で入力してください</span>
+    </div>
+    <div class="form-group">
+      <label for="shippingAddress">配送先住所 <span style="color:red">*</span></label>
+      <input type="text" id="shippingAddress" placeholder="例：東京都新宿区西新宿1-1-1">
+      <span class="error-text" id="errShippingAddress">配送先住所を入力してください</span>
+    </div>
+    <div class="form-group">
+      <label for="note">備考</label>
+      <textarea id="note" rows="3" placeholder="任意"></textarea>
+    </div>
+    <button type="submit">注文を確定する</button>
+  </form>
+  <div id="resultMsg"></div>
+  <script src="order-form.js"></script>
+</body>
+</html>
