@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>注文詳細</title>
+  <style>
+    body { font-family: sans-serif; margin: 24px; }
+    .search-bar { display: flex; gap: 12px; margin-bottom: 20px; }
+    #detailPanel { display: none; }
+    .info-grid { display: grid; grid-template-columns: 160px 1fr; gap: 6px 12px; margin-bottom: 20px; }
+    .info-grid .label { font-weight: bold; color: #555; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #ccc; padding: 8px 12px; }
+    th { background: #f0f0f0; }
+    td.num { text-align: right; }
+    #totalRow td { font-weight: bold; background: #fafafa; }
+    #errorMsg { color: red; display: none; margin-top: 8px; }
+  </style>
+</head>
+<body>
+  <h2>注文詳細照会</h2>
+  <div class="search-bar">
+    <input type="text" id="orderIdInput" placeholder="注文ID（例：ORD-0001）" style="width:240px; padding:6px;">
+    <button id="searchBtn">検索</button>
+  </div>
+  <p id="errorMsg"></p>
+  <div id="detailPanel">
+    <div class="info-grid">
+      <span class="label">注文ID</span>       <span id="dispOrderId"></span>
+      <span class="label">顧客名</span>       <span id="dispCustomerName"></span>
+      <span class="label">注文日</span>       <span id="dispOrderDate"></span>
+      <span class="label">配送先</span>       <span id="dispShippingAddress"></span>
+      <span class="label">ステータス</span>   <span id="dispStatus"></span>
+    </div>
+    <h3>注文明細</h3>
+    <table>
+      <thead>
+        <tr><th>商品ID</th><th>商品名</th><th>単価</th><th>数量</th><th>小計</th></tr>
+      </thead>
+      <tbody id="itemsBody"></tbody>
+      <tfoot>
+        <tr id="totalRow">
+          <td colspan="4" style="text-align:right;">合計（税込）</td>
+          <td class="num" id="dispTotal"></td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+  <script src="order-detail.js"></script>
+</body>
+</html>
