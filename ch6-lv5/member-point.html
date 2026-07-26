@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>会員ポイント管理</title>
+  <style>
+    body { font-family: sans-serif; margin: 24px; max-width: 640px; }
+    .search-bar { display: flex; gap: 12px; margin-bottom: 20px; }
+    #memberPanel { display: none; border: 1px solid #ddd; border-radius: 8px; padding: 16px; }
+    .member-info { display: grid; grid-template-columns: 140px 1fr; gap: 6px 12px; margin-bottom: 16px; }
+    .member-info .lbl { font-weight: bold; color: #555; }
+    .point-value { font-size: 1.4rem; font-weight: bold; color: #1565c0; }
+    .action-area { border-top: 1px solid #eee; padding-top: 16px; display: flex; gap: 12px; align-items: flex-end; }
+    .action-area label { display: block; margin-bottom: 4px; font-size: 0.875rem; }
+    .action-area input { padding: 6px; width: 100px; }
+    button { padding: 8px 16px; cursor: pointer; }
+    #addBtn  { background: #1976d2; color: white; border: none; }
+    #useBtn  { background: #e53935; color: white; border: none; }
+    .msg-success { color: #2e7d32; margin-top: 12px; display: none; }
+    .msg-error   { color: #c62828; margin-top: 8px;  display: none; }
+  </style>
+</head>
+<body>
+  <h2>会員ポイント管理</h2>
+  <div class="search-bar">
+    <input type="text" id="memberIdInput" placeholder="会員ID（例：M-0042）" style="width:220px; padding:6px;">
+    <button id="searchBtn">検索</button>
+  </div>
+  <p class="msg-error" id="searchError"></p>
+  <div id="memberPanel">
+    <div class="member-info">
+      <span class="lbl">会員ID</span>    <span id="dispMemberId"></span>
+      <span class="lbl">氏名</span>      <span id="dispName"></span>
+      <span class="lbl">ランク</span>    <span id="dispRank"></span>
+      <span class="lbl">現在のポイント</span> <span class="point-value" id="dispPoints"></span>
+      <span class="lbl">累積ポイント</span>   <span id="dispLifetime"></span>
+    </div>
+    <div class="action-area">
+      <div>
+        <label for="pointInput">ポイント数</label>
+        <input type="number" id="pointInput" min="1" placeholder="例：100">
+      </div>
+      <button id="addBtn">付与</button>
+      <button id="useBtn">利用</button>
+    </div>
+    <p class="msg-success" id="successMsg"></p>
+    <p class="msg-error"   id="actionError"></p>
+  </div>
+  <script src="member-point.js"></script>
+</body>
+</html>
