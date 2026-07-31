@@ -1,0 +1,19 @@
+【チケット #3021 解答】
+
+■ 設問1: type 列が ALL の意味と影響
+・意味：フルテーブルスキャン（全件検索）を意味します。
+・影響：120万件の全データを順に走査するため処理時間が非常に長く、タイムアウトや高負荷の原因になります。
+
+■ 設問2: possible_keys が NULL の理由
+・検索条件（WHERE email = ...）で利用可能なインデックスが存在しないためです。
+
+■ 設問3: 改善用のSQL文
+CREATE UNIQUE INDEX idx_email ON members(email);
+（または ALTER TABLE members ADD UNIQUE INDEX idx_email(email);）
+
+■ 設問4: インデックス追加後の EXPLAIN 予測
+・type: ALL ➔ const （UNIQUEインデックスによる最速のピンポイント検索になるため）
+・possible_keys: NULL ➔ idx_email （利用可能な候補として認識されるため）
+・key: NULL ➔ idx_email （実際にインデックスが採用されるため）
+・rows: 1200000 ➔ 1 （1件の読み込みで完了するため）
+・Extra: Using where ➔ （空欄） （全件スキャン後のフィルタリングが不要になるため）
