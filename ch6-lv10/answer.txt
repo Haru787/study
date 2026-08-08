@@ -1,0 +1,64 @@
+【チケット #3120　設問 解答】
+
+■ 設問1: 問題1（N+1問題）の原因とSQL書き換え
+【原因】
+当月の注文800,000件を取得した後、注文1件ごとに会員情報を個別のSELECTで取得しているため、合計 1（注文取得）+ 800,000（会員取得）回のSQLが発行されています。これがいわゆる N+1問題です。DB往復（ラウンドトリップ）のオーバーヘッドが80万回分積み重なり、たとえ1回1回のSQLが高速でも全体としては非常に遅くなります。
+
+【解決策：JOIN で1本のSQLにまとめる】
+SELECT o.id, o.member_id, o.order_date, o.total_amount,
+       m.name, m.rank, m.region
+FROM orders o
+JOIN members m ON o.member_id = m.id
+WHERE o.order_date BETWEEN '2026-05-01' AND '2026-05-31'
+  AND o.status = '発送済';
+
+■ 設問2: 問題2の EXPLAIN 各行で起きていること
+・o（orders）: order_date・status にインデックスがなく、3,000万件のフルスキャンが発生。さらに GROUP BY / ORDER BY を満たすインデックスもないため Using temporary; Using filesort も同時発生しています。
+・m（members）: PRIMARY キーは存在するものの、駆動表（o）側の絞り込みができていないため個別の主キー検索（eq_ref）ではなく、200万件を全走査して Block Nested Loop（Using join buffer）で結合しています。
+・oi（order_items）: 結合キー order_id にインデックスが存在しないため、9,000万件（最大テーブル）のフルスキャンが発生しています。
+・p（products）: PRIMARY キーはあるものの、oi 側が絞り込めていないため m と同様に15万件を全走査し join buffer で結合しています。
+・c（categories）: 200件と小さいテーブルですが、p.category_id にインデックスがないため全走査となり join buffer で結合されています。
+
+■ 設問3: 問題2のSQLの問題点（4つ以上）
+1. orders に order_date・status のインデックスがなく、絞り込み条件が生かせず3,000万件フルスキャンになっている。
+2. order_items に結合キー order_id のインデックスがなく、最大テーブル（9,000万件）が毎回フルスキャンされている。
+3. members・products は PRIMARY キーがあるにもかかわらず、駆動表の絞り込み不足により eq_ref にならず、ALL + Block Nested Loop（Using join buffer）という非効率な結合方式になっている。
+4. GROUP BY m.rank, m.region, c.name と ORDER BY total_sales DESC により、絞り込み前の巨大な中間結果に対して一時テーブル・ファイルソートが発生している。
+5. COUNT(DISTINCT o.id) と COUNT(DISTINCT o.member_id) という2種類の DISTINCT 集計を同時に行っており、重複排除の内部処理コストがさらに積み増しされている。
+6. そもそも「都度、全期間データに近い規模のJOIN・集計をリアルタイムに計算する」設計になっており、事前集計（サマリーテーブル等）が存在しない。
+
+■ 設問4: 改善策と優先順位
+【優先度1】orders(status, order_date) の複合インデックス追加
+理由: 全ての結合・集計の起点となる駆動表であり、ここを3,000万件→約80万件に絞り込めれば、後続の結合コストが連鎖的に激減するため最優先。
+
+【優先度2】order_items(order_id, ...) のインデックス追加
+理由: 最大テーブル（9,000万件）のフルスキャンを解消することが次に大きな効果を持つため。可能であれば product_id, quantity, unit_price も含めたカバリングインデックスにし、テーブル本体への追加アクセスも削減する。
+
+【優先度3】products(category_id) のインデックス追加
+理由: categories との結合を ALL → eq_ref/ref に改善するため。members・products の PRIMARY キーは、駆動表側の絞り込みが効くようになれば自動的に有効活用されやすくなる。
+
+【優先度4】N+1問題（問題1）のクエリ統合
+理由: バッチ全体のDB往復回数を80万回超から1回に削減できる、即効性の高い改善のため優先度高めだが、インデックス改善と並行して着手可能。
+
+【優先度5】GROUP BY / ORDER BY 対応（設計面の改善）
+理由: 複数テーブルをまたぐ集計のため、インデックスだけでは filesort・一時テーブルを完全には解消しきれない。根本対応として設問7のサマリーテーブル化等を検討する。
+
+■ 設問5: 改善するためのDDL
+CREATE INDEX idx_orders_status_date_member ON orders(status, order_date, member_id);
+CREATE INDEX idx_order_items_order_product ON order_items(order_id, product_id, quantity, unit_price);
+CREATE INDEX idx_products_category_id ON products(category_id);
+
+■ 設問6: インデックス追加後の type 列の予測
+・o（orders）: ALL → range（status, order_date の複合インデックスによる範囲スキャン）
+・m（members）: ALL → eq_ref（駆動表が絞り込まれ、PRIMARY キーでの1件検索に切り替わる）
+・oi（order_items）: ALL → ref（order_id インデックスによる結合）
+・p（products）: ALL → eq_ref（駆動表が絞り込まれ、PRIMARY キーでの1件検索に切り替わる）
+・c（categories）: ALL → eq_ref（PRIMARY キーによる結合）
+
+なお GROUP BY / ORDER BY はテーブルをまたぐ集計のため、Using temporary; Using filesort 自体は残る可能性がありますが、対象行数が数千万件規模から数十万〜数百万件規模に激減するため、実行時間は大幅に改善します。
+
+■ 設問7: インデックス以外の改善アプローチ
+・サマリーテーブル化: 日次バッチで「会員ランク×地域×カテゴリ」単位の売上を事前集計し、summary テーブルとして保持しておく。月次レポートはこのテーブルを参照するだけで済み、都度大量JOIN・集計を行う必要がなくなる。
+・パーティショニング: orders・order_items を order_date（や紐づく日付）でレンジパーティショニングし、対象月のパーティションのみを読むようにする。パーティションプルーニングによりI/O自体を削減できる。
+・キャッシュ: 月次レポートのように「同じ期間・同じ条件」で再実行されやすい集計結果は、Redis等のキャッシュに保存し再利用する。
+・分析用DB／レプリカの分離: 本番トランザクションDBに直接バッチの重い集計をかけると通常のオンライン処理にも影響するため、読み取り専用レプリカやDWH（データウェアハウス）側で集計を行う構成に切り離すことも有効。
