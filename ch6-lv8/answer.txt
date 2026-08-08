@@ -1,0 +1,25 @@
+チケット #3068　設問 解解答】
+
+■ 設問1: EXPLAIN の3行それぞれで何が起きているか
+・orders（1行目）: インデックスが存在せず、800万件の全行検索が発生しています。
+また、ソートや一時テーブルの作成（Using temporary; Using filesort）により非常に高負荷な状態です。
+・members（2行目）: 結合キーのインデックス検索が活かせず、メモリを用いて50万件の全行検索を行っています。
+・order_items（3行目）: 結合キー order_id にインデックスがないため、2,400万件の全行検索が発生しています。
+
+■ 設問2: orders テーブルで Using temporary; Using filesort が発生している理由
+ORDER BY o.order_date DESC, m.name のように、異なるテーブルのカラムをまたいでソートを指定しているためです。結合完了後にデータを一時テーブル（Using temporary）に保持し、ディスクやメモリ上でソート処理（Using filesort）を実行する必要が生じています。
+
+■ 設問3: 提案する3つのインデックスとその理由
+	1.	orders(status, order_date): WHERE 句の status と order_date による絞り込みを高速化し、フルスキャン（ALL）から範囲検索（range）に改善するため。
+	2.	order_items(order_id): orders との結合条件である order_id による検索を高速化し、フルスキャン（ALL）からインデックス参照（ref）に改善するため。
+	3.	orders(member_id): members との結合条件である member_id にインデックスを割り当て、結合処理の効率を向上させるため。
+
+■ 設問4: 改善するためのDDL（CREATE INDEX 文）
+CREATE INDEX idx_order_date_status ON orders(status, order_date);
+CREATE INDEX idx_order_id ON order_items(order_id);
+CREATE INDEX idx_member_id ON orders(member_id);
+
+■ 設問5: インデックス追加後の「EXPLAIN」での「type」の予測
+・orders: ALL → range
+・members: ALL → eq_ref
+・order_items: ALL → ref
