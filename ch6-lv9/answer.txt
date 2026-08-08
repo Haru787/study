@@ -1,0 +1,34 @@
+チケット #3092　設問 解答
+
+■ 設問1: SQL-A の EXPLAIN で c と p の type が ALL になっている理由
+・c（categories）: name カラムにインデックスが存在しない（PRIMARY のみ）ため、'家電' を検索する際に80件全件を走査するフルスキャンとなっています。
+・p（products）: 結合キー category_id、および WHERE 句の price・is_active のいずれにもインデックスがないため、結合条件でも絞り込み条件でも活用できるインデックスがなく、300,000件全件を走査しています。また ORDER BY p.price を満たすインデックスもないため、フルスキャン後に filesort（および Using temporary）が発生しています。
+
+■ 設問2: SQL-B の EXPLAIN で stocks の type が ALL になっている理由（idx_warehouse が使われない理由を含む）
+WHERE 句の条件 s.quantity < s.reorder_point は、同一行内の2つのカラムを比較する条件です。インデックスは「カラムと定数値の比較」を高速化する仕組みであり、このような列同士の比較には利用できません。
+また idx_warehouse は warehouse_id 単体のインデックスですが、stocks は結合の駆動表（最初に読まれるテーブル）として使われており、WHERE 句に warehouse_id を定数で絞り込む条件がないため、このインデックスを使っても読む行数を減らすことができません。
+結果として quantity と reorder_point の比較はどのみち全行に対して行う必要があり、インデックス経由のランダムI/Oよりも全表スキャン（シーケンシャルI/O）の方がコストが低いとオプティマイザが判断し、possible_keys に idx_warehouse が挙がっていても実際には使われていません。
+
+■ 設問3: SQL-A の改善インデックス（DDL）
+1. categories(name): c テーブルの検索を ALL → ref に改善するため。
+2. products(category_id, is_active, price): 結合キー category_id と絞り込み条件 is_active を左側に、範囲条件かつ ORDER BY 対象である price を右側に配置することで、絞り込みとソートの両方を同一インデックスでカバーし、filesort も解消するため。
+
+CREATE INDEX idx_categories_name ON categories(name);
+CREATE INDEX idx_products_category_active_price ON products(category_id, is_active, price);
+
+■ 設問4: SQL-B の改善インデックス（DDL）
+quantity < reorder_point は列同士の比較のため、通常のインデックスでは直接絞り込めません。そこで比較結果を生成列（GENERATED COLUMN）として持たせ、そこにインデックスを張るのが最も効果的です。
+
+ALTER TABLE stocks ADD COLUMN is_shortage TINYINT(1) GENERATED ALWAYS AS (quantity < reorder_point) STORED;
+CREATE INDEX idx_stocks_shortage ON stocks(is_shortage, warehouse_id, quantity);
+
+これにより stocks の絞り込みが ALL → ref（is_shortage = 1）に改善され、走査対象が発注点割れの行のみに絞られます。走査行数が大きく減ることで、続く products との結合も PRIMARY キーによる eq_ref に切り替わりやすくなり、join buffer を使った非効率な結合（Using join buffer）も解消されます。
+
+■ 設問5: SQL-A・SQL-B の改善策における共通点・相違点
+【共通点】
+・どちらも「WHERE 句・結合条件に使えるインデックスが存在しない」ことがフルスキャンの根本原因であり、絞り込み条件を左側に置いた複合インデックスを追加するという考え方は共通しています。
+・また両方とも、単に絞り込みを速くするだけでなく ORDER BY 対象のカラムをインデックスに含めることで、ソート処理（filesort・一時テーブル）の負荷軽減も狙っています。
+
+【相違点】
+・SQL-A の絞り込み条件（category_id, is_active, price）はすべて「カラム対定数」の比較なので、通常の複合インデックスだけで解決できます。
+・SQL-B の絞り込み条件（quantity < reorder_point）は「カラム対カラム」の比較のため通常のインデックスでは対応できず、生成列を用いて比較結果自体をインデックス化する必要がある点が大きく異なります。
