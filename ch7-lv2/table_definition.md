@@ -24,7 +24,7 @@ DBMS 想定: MySQL / 文字コード: utf8mb4 / `updated_at` は `ON UPDATE CURR
 | 3 | `parent_category_id` | 親カテゴリID | VARCHAR(50) |  |  | ○ | NULL | `categories.category_id` への自己参照外部キー。NULL = ルートカテゴリ |
 | 4 | `description` | カテゴリ説明 | TEXT |  |  |  | NULL | カテゴリの補足説明 |
 | 5 | `display_order` | 表示順 | INT | ○ |  |  | 0 | 一覧表示時の並び順（昇順）。0以上 |
-| 6 | `is_active` | 有効フラグ | TINYINT(1) | ○ |  |  | 1 | 0 = 無効、1 = 有効 |
+| 6 | `is_active` | 有効フラグ | TINYINT(1) | ○ |  |  | 0 | 0 = 無効、1 = 有効 |
 | 7 | `created_at` | 登録日時 | DATETIME | ○ |  |  | NOW() | レコード登録日時 |
 | 8 | `updated_at` | 更新日時 | DATETIME | ○ |  |  | NOW() | レコード更新日時（更新時に現在日時へ自動更新） |
 
@@ -37,11 +37,11 @@ DBMS 想定: MySQL / 文字コード: utf8mb4 / `updated_at` は `ON UPDATE CURR
 | 1 | `product_id` | 商品ID | VARCHAR(50) | ○ | ○ |  |  | 例：`PROD-0001` |
 | 2 | `product_name` | 商品名 | VARCHAR(255) | ○ |  |  |  | 商品名 |
 | 3 | `category_id` | カテゴリID | VARCHAR(50) | ○ |  | ○ |  | `categories.category_id` への外部キー |
-| 4 | `sku` | SKUコード | VARCHAR(255) | ○ |  |  |  | SKUコード（例：`SKU-ABC-001`）。UNIQUE制約 |
+| 4 | `sku` | SKUコード | VARCHAR(50) | ○ |  |  |  | SKUコード（例：`SKU-ABC-001`）。UNIQUE制約 |
 | 5 | `unit_price` | 販売単価（税抜） | INT | ○ |  |  | 0 | 販売単価（税抜）。0以上 |
 | 6 | `cost_price` | 仕入れ単価 | INT | ○ |  |  | 0 | 仕入れ単価。0以上 |
 | 7 | `description` | 商品説明 | TEXT |  |  |  | NULL | 商品の詳細説明 |
-| 8 | `is_active` | 販売中フラグ | TINYINT(1) | ○ |  |  | 1 | 0 = 販売停止、1 = 販売中 |
+| 8 | `is_active` | 販売中フラグ | TINYINT(1) | ○ |  |  | 0 | 0 = 販売停止、1 = 販売中 |
 | 9 | `created_at` | 登録日時 | DATETIME | ○ |  |  | NOW() | レコード登録日時 |
 | 10 | `updated_at` | 更新日時 | DATETIME | ○ |  |  | NOW() | レコード更新日時（更新時に現在日時へ自動更新） |
 
@@ -85,9 +85,6 @@ DBMS 想定: MySQL / 文字コード: utf8mb4 / `updated_at` は `ON UPDATE CURR
 - **UNIQUE**: `products.sku`、`stocks.product_id`
 - **CHECK**: `unit_price` / `cost_price` / `quantity` / `reorder_point` / `reorder_quantity` / `display_order` / `sort_order` は 0 以上
 - 全テーブルに `created_at`・`updated_at`（DATETIME, NOT NULL, DEFAULT NOW()）を保持。`updated_at` は `ON UPDATE CURRENT_TIMESTAMP`
-- `boolean` 型（`is_active` / `is_primary`）は TINYINT(1) で表現し、0 = false / 1 = true
+- `boolean` 型（`is_active` / `is_primary`）は TINYINT(1) で表現し、0 = false / 1 = true。Java の `boolean` 初期値に合わせてデフォルトは 0（false）
 
 ---
-
-参照: スプレッドシート「テーブル定義書の作成」シート
-https://docs.google.com/spreadsheets/d/1UsVeFtGBc83eR-jCIm6Zb6_WjOm-o-ZK-xHDbtf59AM/edit?gid=1969294282#gid=1969294282
