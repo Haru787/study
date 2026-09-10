@@ -4,7 +4,7 @@
 
 ## システム概要
 
-既存の `CustomerDao` / `OrderSummaryService` を Spring Boot の REST API として設計した場合の仕様。
+`CustomerDao` / `OrderSummaryService` を Spring Boot の REST API として設計した場合の仕様。
 顧客（`Customer`）と、顧客に紐づく注文（`OrderRecord`）をリソースとして扱う。
 注文は顧客の配下リソースとして表現し、注文履歴・合計金額は顧客IDを起点に取得する。
 
